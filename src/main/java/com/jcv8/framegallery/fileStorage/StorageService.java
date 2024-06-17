@@ -34,6 +34,7 @@ public class StorageService implements StorageServiceApi {
         }
 
         this.rootLocation = Paths.get(properties.getLocation());
+        init();
     }
 
     @Override

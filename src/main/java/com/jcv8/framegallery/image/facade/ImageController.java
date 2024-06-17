@@ -9,18 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(path = "/api/rest/v1/image")

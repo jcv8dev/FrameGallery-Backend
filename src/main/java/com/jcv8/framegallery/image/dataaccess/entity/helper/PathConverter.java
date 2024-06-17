@@ -3,7 +3,6 @@ package main.java.com.jcv8.framegallery.image.dataaccess.entity.helper;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import main.java.com.jcv8.framegallery.fileStorage.StorageProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.file.Path;
 

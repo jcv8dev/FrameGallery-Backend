@@ -30,5 +30,7 @@ public class Image {
     @GeneratedValue
     private UUID id;
 
-    public Image(Path path) {}
+    public Image(Path path) {
+        this.path = path;
+    }
 }
