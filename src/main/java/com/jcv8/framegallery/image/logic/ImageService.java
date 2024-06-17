@@ -100,12 +100,12 @@ public class ImageService {
 
     /**
      * Re-indexes all files without any representation in the database.
-     *
      */
     public void indexOrphans() {
         List<Path> orphans = getOrphans();
         for (Path orphan : orphans) {
             Image orphanImage = new Image(orphan);
+            imageRepository.save(orphanImage);
         }
     }
 
