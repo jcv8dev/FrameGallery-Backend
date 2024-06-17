@@ -1,8 +1,6 @@
 package main.java.com.jcv8.framegallery.image.dataaccess.entity.ImageProperty;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,34 +12,30 @@ import lombok.Setter;
 public class Aperture extends ImageProperty<Double>{
 
     private String name = "Aperture";
-    private Double value;
+    private Double propertyValue;
     private String unit = "f";
 
-    public Aperture(double value){
-        this.value = value;
+    public Aperture(double propertyValue){
+        this.propertyValue = propertyValue;
     }
 
-    @Id
-    @GeneratedValue
-    private Long id;
-
     @Override
-    public String getName() {
+    public String getPropertyName() {
         return name;
     }
 
     @Override
-    public String getUnit() {
+    public String getPropertyUnit() {
         return unit;
     }
 
     @Override
-    public Double getValue() {
-        return value;
+    public Double getPropertyValue() {
+        return propertyValue;
     }
 
     @Override
     public String getFormattedValue() {
-        return String.format("%s%s", unit, value);
+        return String.format("%s%s", unit, propertyValue);
     }
 }

@@ -13,35 +13,31 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ExposureTime extends ImageProperty<String>{
 
-    private String name = "Aperture";
-    private String value;
-    private String unit = "f";
+    private String propertyName = "Aperture";
+    private String propertyValue;
+    private String propertyUnit = "f";
 
     public ExposureTime(String value){
-        this.value = value;
-    }
-
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @Override
-    public String getName() {
-        return name;
+        this.propertyValue = value;
     }
 
     @Override
-    public String getUnit() {
-        return unit;
+    public String getPropertyName() {
+        return propertyName;
     }
 
     @Override
-    public String getValue() {
-        return value;
+    public String getPropertyUnit() {
+        return propertyUnit;
+    }
+
+    @Override
+    public String getPropertyValue() {
+        return propertyValue;
     }
 
     @Override
     public String getFormattedValue() {
-        return String.format("%s%s", value, unit);
+        return String.format("%s%s", propertyValue, propertyUnit);
     }
 }

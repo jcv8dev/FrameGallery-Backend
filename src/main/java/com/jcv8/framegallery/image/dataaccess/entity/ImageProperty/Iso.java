@@ -1,8 +1,6 @@
 package main.java.com.jcv8.framegallery.image.dataaccess.entity.ImageProperty;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,35 +11,31 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Iso extends ImageProperty<Integer>{
 
-    private String name = "ISO";
-    private Integer value;
-    private String unit = "";
+    private String propertyName = "ISO";
+    private Integer propertyValue;
+    private String propertyUnit = "";
 
     public Iso(int value){
-        this.value = value;
-    }
-
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @Override
-    public String getName() {
-        return name;
+        this.propertyValue = value;
     }
 
     @Override
-    public String getUnit() {
-        return unit;
+    public String getPropertyName() {
+        return propertyName;
     }
 
     @Override
-    public Integer getValue() {
-        return value;
+    public String getPropertyUnit() {
+        return propertyUnit;
+    }
+
+    @Override
+    public Integer getPropertyValue() {
+        return propertyValue;
     }
 
     @Override
     public String getFormattedValue() {
-        return String.format("%s", value);
+        return String.format("%s", propertyValue);
     }
 }

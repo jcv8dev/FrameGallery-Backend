@@ -1,8 +1,6 @@
 package main.java.com.jcv8.framegallery.image.dataaccess.entity.ImageProperty;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,35 +11,31 @@ import lombok.Setter;
 @NoArgsConstructor
 public class FocalLength extends ImageProperty<Double>{
 
-    private String name = "Focal Length";
-    private Double value;
-    private String unit = "mm";
+    private String propertyName = "Focal Length";
+    private Double propertyValue;
+    private String propertyUnit = "mm";
 
-    public FocalLength(double value){
-        this.value = value;
-    }
-
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @Override
-    public String getName() {
-        return name;
+    public FocalLength(double propertyValue){
+        this.propertyValue = propertyValue;
     }
 
     @Override
-    public String getUnit() {
-        return unit;
+    public String getPropertyName() {
+        return propertyName;
     }
 
     @Override
-    public Double getValue() {
-        return value;
+    public String getPropertyUnit() {
+        return propertyUnit;
+    }
+
+    @Override
+    public Double getPropertyValue() {
+        return propertyValue;
     }
 
     @Override
     public String getFormattedValue() {
-        return String.format("%s%s", unit, value);
+        return String.format("%s%s", propertyUnit, propertyValue);
     }
 }
