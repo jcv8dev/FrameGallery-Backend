@@ -109,6 +109,9 @@ public class ImageService {
         }
     }
 
+    /**
+     * @return a list of Paths corresponding to all files without an entry in the database
+     */
     public List<Path> getOrphans() {
         List<Path> imagePaths = getAllImagePaths();
         List<Path> orphans = new ArrayList<>();
