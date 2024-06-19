@@ -1,7 +1,6 @@
 package com.jcv8.framegallery;
 
 
-import main.java.com.jcv8.framegallery.FrameGalleryApplication;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.*;
