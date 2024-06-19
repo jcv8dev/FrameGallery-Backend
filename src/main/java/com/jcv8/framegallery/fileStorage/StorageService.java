@@ -1,7 +1,7 @@
-package main.java.com.jcv8.framegallery.fileStorage;
+package com.jcv8.framegallery.fileStorage;
 
-import main.java.com.jcv8.framegallery.fileStorage.exception.StorageException;
-import main.java.com.jcv8.framegallery.fileStorage.exception.StorageFileNotFoundException;
+import com.jcv8.framegallery.fileStorage.exception.StorageException;
+import com.jcv8.framegallery.fileStorage.exception.StorageFileNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;

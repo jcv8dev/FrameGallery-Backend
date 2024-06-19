@@ -1,8 +1,8 @@
-package main.java.com.jcv8.framegallery.image.logic;
+package com.jcv8.framegallery.image.logic;
 
-import main.java.com.jcv8.framegallery.image.dataaccess.entity.Image;
-import main.java.com.jcv8.framegallery.image.dataaccess.repository.ImageRepository;
-import main.java.com.jcv8.framegallery.fileStorage.StorageService;
+import com.jcv8.framegallery.image.dataaccess.entity.Image;
+import com.jcv8.framegallery.image.dataaccess.repository.ImageRepository;
+import com.jcv8.framegallery.fileStorage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;

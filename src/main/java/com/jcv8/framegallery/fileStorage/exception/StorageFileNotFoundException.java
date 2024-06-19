@@ -1,4 +1,4 @@
-package main.java.com.jcv8.framegallery.fileStorage.exception;
+package com.jcv8.framegallery.fileStorage.exception;
 
 public class StorageFileNotFoundException extends StorageException {
 

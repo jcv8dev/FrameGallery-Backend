@@ -1,7 +1,7 @@
-package main.java.com.jcv8.framegallery.image.facade;
+package com.jcv8.framegallery.image.facade;
 
-import main.java.com.jcv8.framegallery.image.dataaccess.entity.Image;
-import main.java.com.jcv8.framegallery.image.logic.ImageService;
+import com.jcv8.framegallery.image.dataaccess.entity.Image;
+import com.jcv8.framegallery.image.logic.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;

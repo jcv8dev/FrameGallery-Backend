@@ -1,4 +1,4 @@
-package main.java.com.jcv8.framegallery.image.dataaccess.entity;
+package com.jcv8.framegallery.image.dataaccess.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

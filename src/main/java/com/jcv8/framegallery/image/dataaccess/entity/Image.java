@@ -1,9 +1,9 @@
-package main.java.com.jcv8.framegallery.image.dataaccess.entity;
+package com.jcv8.framegallery.image.dataaccess.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import main.java.com.jcv8.framegallery.image.dataaccess.entity.ImageProperty.ImageProperty;
-import main.java.com.jcv8.framegallery.image.dataaccess.entity.helper.PathConverter;
+import com.jcv8.framegallery.image.dataaccess.entity.ImageProperty.ImageProperty;
+import com.jcv8.framegallery.image.dataaccess.entity.helper.PathConverter;
 
 import java.nio.file.Path;
 import java.util.List;

@@ -1,4 +1,4 @@
-package main.java.com.jcv8.framegallery.fileStorage;
+package com.jcv8.framegallery.fileStorage;
 
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;

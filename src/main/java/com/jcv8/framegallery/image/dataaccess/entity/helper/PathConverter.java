@@ -1,8 +1,8 @@
-package main.java.com.jcv8.framegallery.image.dataaccess.entity.helper;
+package com.jcv8.framegallery.image.dataaccess.entity.helper;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import main.java.com.jcv8.framegallery.fileStorage.StorageProperties;
+import com.jcv8.framegallery.fileStorage.StorageProperties;
 
 import java.nio.file.Path;
 

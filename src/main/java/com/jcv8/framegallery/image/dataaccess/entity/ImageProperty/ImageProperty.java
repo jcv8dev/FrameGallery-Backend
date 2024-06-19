@@ -1,4 +1,4 @@
-package main.java.com.jcv8.framegallery.image.dataaccess.entity.ImageProperty;
+package com.jcv8.framegallery.image.dataaccess.entity.ImageProperty;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
