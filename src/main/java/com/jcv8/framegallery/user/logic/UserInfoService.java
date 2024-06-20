@@ -10,8 +10,14 @@ import org.springframework.stereotype.Service;
 import com.jcv8.framegallery.user.dataaccess.entity.UserInfo;
 import com.jcv8.framegallery.user.dataaccess.entity.UserInfoDetails;
 import com.jcv8.framegallery.user.dataaccess.repository.UserInfoRepository;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
+
+import static org.antlr.v4.runtime.tree.xpath.XPath.findAll;
 
 @Service
 public class UserInfoService implements UserDetailsService {
@@ -33,8 +39,8 @@ public class UserInfoService implements UserDetailsService {
         return new UserInfoDetails(userDetail.orElse(null));
     }
 
-    public UserInfo addUser(UserInfo userInfo) {
-        if(repository.findAll().size() > 1){
+    public UserInfo addUser(UserInfo userInfo) throws IllegalStateException{
+        if(hasOnboarded()){
             throw new IllegalStateException("Only one user can be added");
         }
         logger.info("Adding user " + userInfo);
@@ -46,8 +52,13 @@ public class UserInfoService implements UserDetailsService {
     }
 
     public Boolean hasOnboarded() {
-        return repository.findAll().size() > 1;
+        return !repository.findAll().isEmpty();
     }
 
-
+    public Map<String, String> getArtistInfo() {
+        List<UserInfo> artists = repository.findAll();
+        Map<String, String> artistInfo = new HashMap<>();
+        artistInfo.put("name", artists.get(0).getName());
+        return artistInfo;
+    }
 }

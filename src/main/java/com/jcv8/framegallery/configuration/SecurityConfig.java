@@ -33,22 +33,17 @@ public class SecurityConfig {
     @Autowired
     private UserDetailsService userDetailsService;
 
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        return new UserInfoService();
-//    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/rest/v1/auth/register").permitAll())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/rest/v1/auth/login").permitAll())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/rest/v1/artist/auth/register").permitAll())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/rest/v1/artist/auth/login").permitAll())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/rest/v1/artist/auth/onboarding").permitAll())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/rest/v1/artist/info").permitAll())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/api/rest/v1/image/all").permitAll())
                 .authorizeHttpRequests(auth -> auth.requestMatchers(RegexRequestMatcher.regexMatcher("/api/rest/v1/image/[0-9a-fA-F-]{36}")).permitAll())
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
-
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
