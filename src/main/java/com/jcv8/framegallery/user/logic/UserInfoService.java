@@ -34,13 +34,19 @@ public class UserInfoService implements UserDetailsService {
     }
 
     public UserInfo addUser(UserInfo userInfo) {
+        if(repository.findAll().size() > 1){
+            throw new IllegalStateException("Only one user can be added");
+        }
         logger.info("Adding user " + userInfo);
         if(repository.findByUsername(userInfo.getUsername()).isEmpty()) {
             userInfo.setPassword(encoder.encode(userInfo.getPassword()));
             return repository.save(userInfo);
-
         }
         return null;
+    }
+
+    public Boolean hasOnboarded() {
+        return repository.findAll().size() > 1;
     }
 
 
