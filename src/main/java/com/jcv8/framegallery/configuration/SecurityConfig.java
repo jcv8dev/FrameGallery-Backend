@@ -41,7 +41,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/api/rest/v1/artist/auth/onboarding").permitAll())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/api/rest/v1/artist/info").permitAll())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/api/rest/v1/image/all").permitAll())
-                .authorizeHttpRequests(auth -> auth.requestMatchers(RegexRequestMatcher.regexMatcher("/api/rest/v1/image/[0-9a-fA-F-]{36}")).permitAll())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/rest/v1/image/**").permitAll())
+
+
+//                .authorizeHttpRequests(auth -> auth.requestMatchers(RegexRequestMatcher.regexMatcher("\\/api\\/rest\\/v1\\/image\\/[0-9a-fA-F-]{36}")).permitAll())
+//                .authorizeHttpRequests(auth -> auth.requestMatchers(RegexRequestMatcher.regexMatcher("\\/api\\/rest\\/v1\\/image\\/[0-9a-fA-F-]{36}\\.[a-zA-Z]{3,4}")).permitAll())
+
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

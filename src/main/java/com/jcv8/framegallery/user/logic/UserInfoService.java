@@ -36,7 +36,7 @@ public class UserInfoService implements UserDetailsService {
         Optional<UserInfo> userDetail = repository.findByUsername(username);
 
         // Converting userDetail to UserDetails
-        return new UserInfoDetails(userDetail.orElse(null));
+        return new UserInfoDetails(userDetail.get());
     }
 
     public UserInfo addUser(UserInfo userInfo) throws IllegalStateException{

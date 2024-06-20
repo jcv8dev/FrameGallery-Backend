@@ -46,6 +46,7 @@ public class ImageService {
         Path imagePath = generateUUIDPath(image.getId(), file.getOriginalFilename());
         storageService.store(imagePath, file);
         image.setPath(imagePath);
+        image.setPublished(false); // default: image not publicly visible
         return imageRepository.save(image);
     }
 
@@ -80,11 +81,46 @@ public class ImageService {
         return storageService.loadAsResource(image.get().getPath());
     }
 
+    public Resource getImageByFilename(String filename) throws NoSuchFileException {
+        UUID uuid = getUUIDFromPath(Path.of(filename));
+        return getImageById(uuid);
+    }
+
     /**
-     * @return a list of paths of all images in the storageServices directory.
+     * @return a list of filesystem paths of all images in the storageServices directory.
      */
-    public List<Path> getAllImagePaths() {
-        return storageService.loadAll().collect(Collectors.toList());
+    private List<Path> getAllImagePaths() {
+        return imageRepository.findAll()
+                .stream()
+                .map(Image::getPath)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * @return a list of filenames of all images in the database
+     */
+    public List<String> getAllImageFilename() {
+        List<Image> images = imageRepository.findAll();
+        for (Image image : images) {
+            System.out.println(image.getPath().getFileName());
+        }
+        return images.stream().map(image -> image.getPath().getFileName().toString()).collect(Collectors.toList());
+    }
+
+    /**
+     * @return a list of filenames of all images in the database where published is set to true
+     */
+    public List<String> getAllPublishedImageFilename() {
+        List<Path> paths = getAllImagePaths();
+        List<String> publishedImageFilenames = new ArrayList<>();
+        for (Path path : paths) {
+            if(imageRepository.findByPath(path).isPresent()){
+                if(imageRepository.findByPath(path).get().getPublished()) {
+                    publishedImageFilenames.add(path.getFileName().toString());
+                }
+            }
+        }
+        return publishedImageFilenames;
     }
 
     /**
@@ -105,18 +141,21 @@ public class ImageService {
         List<Path> orphans = getOrphans();
         for (Path orphan : orphans) {
             Image orphanImage = new Image(orphan);
+
             imageRepository.save(orphanImage);
         }
     }
+
+
 
     /**
      * @return a list of Paths corresponding to all files without an entry in the database
      */
     public List<Path> getOrphans() {
-        List<Path> imagePaths = getAllImagePaths();
+        List<Path> imagePaths = storageService.loadAll().toList();
         List<Path> orphans = new ArrayList<>();
         for (Path imagePath : imagePaths) {
-            UUID uuid = getUUIDFromPath(imagePath.toString());
+            UUID uuid = getUUIDFromPath(imagePath);
             if(imageRepository.findById(uuid).isEmpty()){
                 orphans.add(imagePath);
             }
@@ -128,14 +167,14 @@ public class ImageService {
      * Extracts the UUID from a filename (e.g. removes the file extension)
      * @return the UUID as String
      */
-    private UUID getUUIDFromPath(String path) {
+    private UUID getUUIDFromPath(Path path) {
         Pattern pattern = Pattern.compile("^[^.]+");
-        Matcher matcher = pattern.matcher(path);
+        Matcher matcher = pattern.matcher(path.toString());
         System.out.println(path);
         if (matcher.find()) {
             return UUID.fromString(matcher.group());
         }
-        throw new InvalidPathException(path, "File does not have an extension");
+        throw new InvalidPathException(path.toString(), "File does not have an extension");
     }
 
     /**
@@ -157,5 +196,10 @@ public class ImageService {
         if(exceptionFlag){
             throw new IOException(exceptionMessage);
         }
+    }
+
+
+    public List<Image> getAllImage() {
+        return imageRepository.findAll();
     }
 }

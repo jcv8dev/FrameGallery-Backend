@@ -1,11 +1,17 @@
 package com.jcv8.framegallery.image.facade;
 
+import com.jcv8.framegallery.configuration.JwtService;
 import com.jcv8.framegallery.image.dataaccess.entity.Image;
 import com.jcv8.framegallery.image.logic.ImageService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,14 +28,34 @@ import java.util.logging.Logger;
 @CrossOrigin(origins = "*")
 public class ImageController {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ImageController.class);
     Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Autowired
     private ImageService imageService;
 
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtService jwtService;
+
+    /**
+     * Endpoint for retrieving filenames of images
+     * @param token optional, allows to see unpublished images
+     * @param showAll optional, selects whether to see unpublished images when authenticated
+     * @return a list of Strings representing filenames
+     */
     @GetMapping(value = "/all")
-    public ResponseEntity<?> getAllImagePaths() {
-        return ResponseEntity.status(HttpStatus.OK).body(imageService.getAllImagePaths());
+    public ResponseEntity<?> getAllImageFilename( @RequestHeader (name="Authorization") String token, @RequestParam(required = false) Boolean showAll) {
+        String username = jwtService.extractUsername(token.split(" ")[1]);
+        if(showAll != null && showAll && userDetailsService.loadUserByUsername(username) != null){
+            logger.info("Retrieving all image paths");
+            return ResponseEntity.status(HttpStatus.OK).body(imageService.getAllImageFilename());
+        } else {
+            logger.info("Retrieving all published paths");
+            return ResponseEntity.status(HttpStatus.OK).body(imageService.getAllPublishedImageFilename());
+        }
     }
 
     @PutMapping(value = "/add")
@@ -47,7 +73,7 @@ public class ImageController {
         }
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/{id:[0-9a-zA-Z-]{36}}")
     public ResponseEntity<?> getImageById(@PathVariable("id") UUID id) {
         try{
             Resource image = imageService.getImageById(id);
@@ -55,6 +81,35 @@ public class ImageController {
             return ResponseEntity.status(HttpStatus.OK).body(image);
         } catch (NoSuchFileException e) {
             logger.log(Level.WARNING, "Request for non-existing image with id " + id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping(value = "/{filename:[0-9a-zA-Z-]{36}\\.[a-zA-Z]{3,4}}")
+    public ResponseEntity<?> getImageById(@PathVariable("filename") String filename, HttpServletRequest request) {
+        try{
+            Resource image = imageService.getImageByFilename(filename);
+
+            // Try to determine file's content type
+            String contentType = null;
+            try {
+                contentType = request.getServletContext().getMimeType(image.getFile().getAbsolutePath());
+            } catch (IOException ex) {
+                logger.info("Could not determine file type.");
+            }
+
+            // Fallback to the default content type if type could not be determined
+            if(contentType == null) {
+                contentType = "application/octet-stream";
+            }
+
+            logger.info("Request for " + filename);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .body(image);
+
+        } catch (NoSuchFileException e) {
+            logger.log(Level.WARNING, "Request for non-existing image " + filename);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
