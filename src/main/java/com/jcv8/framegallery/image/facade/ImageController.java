@@ -47,14 +47,17 @@ public class ImageController {
      */
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllImageFilename( @RequestHeader(name="Authorization", required = false) String token, @RequestParam(required = false) Boolean showAll) {
-        String username = jwtService.extractUsername(token.split(" ")[1]);
-        if(showAll != null && showAll && userDetailsService.loadUserByUsername(username) != null){
-            logger.info("Retrieving all image paths");
-            return ResponseEntity.status(HttpStatus.OK).body(imageService.getAllImageFilename());
-        } else {
-            logger.info("Retrieving all published paths");
-            return ResponseEntity.status(HttpStatus.OK).body(imageService.getAllPublishedImageFilename());
+        if(token != null){
+            String username = jwtService.extractUsername(token.split(" ")[1]);
+            if(showAll != null && showAll && userDetailsService.loadUserByUsername(username) != null){
+                logger.info("Retrieving all image paths");
+                return ResponseEntity.status(HttpStatus.OK).body(imageService.getAllImageFilename());
+            }
         }
+
+        logger.info("Retrieving all published paths");
+        return ResponseEntity.status(HttpStatus.OK).body(imageService.getAllPublishedImageFilename());
+
     }
 
     @PutMapping(value = "/add")
