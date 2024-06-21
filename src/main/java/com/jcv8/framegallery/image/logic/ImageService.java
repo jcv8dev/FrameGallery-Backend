@@ -141,7 +141,7 @@ public class ImageService {
         List<Path> orphans = getOrphans();
         for (Path orphan : orphans) {
             Image orphanImage = new Image(orphan);
-
+            orphanImage.setPublished(false);
             imageRepository.save(orphanImage);
         }
     }
