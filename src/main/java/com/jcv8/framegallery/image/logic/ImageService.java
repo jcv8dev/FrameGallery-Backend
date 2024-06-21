@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.NoSuchFileException;
@@ -81,6 +84,21 @@ public class ImageService {
         return storageService.loadAsResource(image.get().getPath());
     }
 
+    /**
+     * Sets the published value of an image
+     * @param id the images id
+     * @param published the value to set published to
+     */
+    public void setImagePublished(UUID id, boolean published) throws FileNotFoundException {
+        Optional<Image> image = imageRepository.findById(id);
+        if(image.isPresent()) {
+            image.get().setPublished(published);
+            imageRepository.save(image.get());
+        } else {
+            throw new FileNotFoundException("");
+        }
+    }
+
     public Resource getImageByFilename(String filename) throws NoSuchFileException {
         UUID uuid = getUUIDFromPath(Path.of(filename));
         return getImageById(uuid);
@@ -101,9 +119,6 @@ public class ImageService {
      */
     public List<String> getAllImageFilename() {
         List<Image> images = imageRepository.findAll();
-        for (Image image : images) {
-            System.out.println(image.getPath().getFileName());
-        }
         return images.stream().map(image -> image.getPath().getFileName().toString()).collect(Collectors.toList());
     }
 
@@ -111,16 +126,17 @@ public class ImageService {
      * @return a list of filenames of all images in the database where published is set to true
      */
     public List<String> getAllPublishedImageFilename() {
-        List<Path> paths = getAllImagePaths();
-        List<String> publishedImageFilenames = new ArrayList<>();
-        for (Path path : paths) {
-            if(imageRepository.findByPath(path).isPresent()){
-                if(imageRepository.findByPath(path).get().getPublished()) {
-                    publishedImageFilenames.add(path.getFileName().toString());
-                }
-            }
-        }
-        return publishedImageFilenames;
+//        List<Path> paths = getAllImagePaths();
+//        List<String> publishedImageFilenames = new ArrayList<>();
+//        for (Path path : paths) {
+//            if(imageRepository.findByPath(path).isPresent()){
+//                if(imageRepository.findByPath(path).get().getPublished()) {
+//                    publishedImageFilenames.add(path.getFileName().toString());
+//                }
+//            }
+//        }
+        List<Image> images = imageRepository.findAll();
+        return images.stream().filter(Image::getPublished).map(image -> image.getPath().getFileName().toString()).collect(Collectors.toList());
     }
 
     /**
@@ -170,7 +186,6 @@ public class ImageService {
     private UUID getUUIDFromPath(Path path) {
         Pattern pattern = Pattern.compile("^[^.]+");
         Matcher matcher = pattern.matcher(path.toString());
-        System.out.println(path);
         if (matcher.find()) {
             return UUID.fromString(matcher.group());
         }

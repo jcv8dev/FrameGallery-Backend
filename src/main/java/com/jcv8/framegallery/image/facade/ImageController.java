@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.NoSuchFileException;
@@ -57,7 +59,6 @@ public class ImageController {
 
         logger.info("Retrieving all published paths");
         return ResponseEntity.status(HttpStatus.OK).body(imageService.getAllPublishedImageFilename());
-
     }
 
     @PutMapping(value = "/add")
@@ -82,6 +83,18 @@ public class ImageController {
             logger.log(Level.INFO, "Retrieving image " + image.getFilename());
             return ResponseEntity.status(HttpStatus.OK).body(image);
         } catch (NoSuchFileException e) {
+            logger.log(Level.WARNING, "Request for non-existing image with id " + id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PutMapping(value = "/{id:[0-9a-zA-Z-]{36}}/publish")
+    public ResponseEntity<?> publishImage(@PathVariable("id") UUID id, @RequestParam Boolean published) {
+        try{
+            imageService.setImagePublished(id, published);
+            logger.log(Level.INFO, "Updating image with UUID" + id);
+            return ResponseEntity.status(HttpStatus.OK).body("");
+        } catch (FileNotFoundException e) {
             logger.log(Level.WARNING, "Request for non-existing image with id " + id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
