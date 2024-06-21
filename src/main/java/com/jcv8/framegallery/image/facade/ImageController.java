@@ -47,7 +47,7 @@ public class ImageController {
      * @return a list of Strings representing filenames
      */
     @GetMapping(value = "/all")
-    public ResponseEntity<?> getAllImageFilename( @RequestHeader (name="Authorization") String token, @RequestParam(required = false) Boolean showAll) {
+    public ResponseEntity<?> getAllImageFilename( @RequestHeader(name="Authorization", required = false) String token, @RequestParam(required = false) Boolean showAll) {
         String username = jwtService.extractUsername(token.split(" ")[1]);
         if(showAll != null && showAll && userDetailsService.loadUserByUsername(username) != null){
             logger.info("Retrieving all image paths");
