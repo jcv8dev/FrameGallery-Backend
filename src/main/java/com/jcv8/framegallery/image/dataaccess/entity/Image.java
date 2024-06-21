@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
 public class Image {
 
@@ -43,6 +42,10 @@ public class Image {
         } else {
             id = UUID.randomUUID();
         }
+    }
+
+    public Image() {
+        this.id = UUID.randomUUID();
     }
 
     private String UuidFromFilename(Path path){
