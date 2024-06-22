@@ -8,7 +8,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
@@ -99,9 +98,15 @@ public class ImageService {
         }
     }
 
-    public Resource getImageByFilename(String filename) throws NoSuchFileException {
+    public Resource getImageFileByFilename(String filename) throws NoSuchFileException {
         UUID uuid = getUUIDFromPath(Path.of(filename));
         return getImageById(uuid);
+    }
+
+    public Image getImageInfoById(UUID id) throws NoSuchFileException {
+        Optional<Image> image = imageRepository.findById(id);
+        if(image.isEmpty()) {throw new NoSuchFileException("File does not exist");}
+        return image.get();
     }
 
     /**

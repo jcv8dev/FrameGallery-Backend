@@ -21,6 +21,7 @@ public class Image {
     @Convert(converter = PathConverter.class)
     private Path path;
     private String title;
+    private String description;
 
     @ManyToMany
     private List<Keyword> keywords;

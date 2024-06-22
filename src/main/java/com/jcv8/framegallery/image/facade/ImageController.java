@@ -1,6 +1,7 @@
 package com.jcv8.framegallery.image.facade;
 
 import com.jcv8.framegallery.configuration.JwtService;
+import com.jcv8.framegallery.image.dataaccess.dto.ImageInfoDto;
 import com.jcv8.framegallery.image.dataaccess.entity.Image;
 import com.jcv8.framegallery.image.logic.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -76,12 +77,17 @@ public class ImageController {
         }
     }
 
+    /**
+     * Request for an Images Information
+     * @param id the images id
+     * @return the information from the database
+     */
     @GetMapping(value = "/{id:[0-9a-zA-Z-]{36}}")
-    public ResponseEntity<?> getImageById(@PathVariable("id") UUID id) {
+    public ResponseEntity<?> getImageInfoById(@PathVariable("id") UUID id) {
         try{
-            Resource image = imageService.getImageById(id);
-            logger.log(Level.INFO, "Retrieving image " + image.getFilename());
-            return ResponseEntity.status(HttpStatus.OK).body(image);
+            Image image = imageService.getImageInfoById(id);
+            logger.log(Level.INFO, "Retrieving image info for " + id);
+            return ResponseEntity.status(HttpStatus.OK).body(new ImageInfoDto(image));
         } catch (NoSuchFileException e) {
             logger.log(Level.WARNING, "Request for non-existing image with id " + id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -103,7 +109,7 @@ public class ImageController {
     @GetMapping(value = "/{filename:[0-9a-zA-Z-]{36}\\.[a-zA-Z]{3,4}}")
     public ResponseEntity<?> getImageById(@PathVariable("filename") String filename, HttpServletRequest request) {
         try{
-            Resource image = imageService.getImageByFilename(filename);
+            Resource image = imageService.getImageFileByFilename(filename);
 
             // Try to determine file's content type
             String contentType = null;
