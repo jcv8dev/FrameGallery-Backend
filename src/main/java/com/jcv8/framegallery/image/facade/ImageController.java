@@ -3,7 +3,9 @@ package com.jcv8.framegallery.image.facade;
 import com.jcv8.framegallery.configuration.JwtService;
 import com.jcv8.framegallery.image.dataaccess.dto.ImageInfoDto;
 import com.jcv8.framegallery.image.dataaccess.entity.Image;
-import com.jcv8.framegallery.image.logic.ImageService;
+import com.jcv8.framegallery.image.logic.ImageDownloadService;
+import com.jcv8.framegallery.image.logic.ImageInfoService;
+import com.jcv8.framegallery.image.logic.ImageUploadService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +36,13 @@ public class ImageController {
     Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Autowired
-    private ImageService imageService;
+    private ImageUploadService imageUploadService;
+
+    @Autowired
+    private ImageDownloadService imageDownloadService;
+
+    @Autowired
+    private ImageInfoService imageInfoService;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -54,18 +62,18 @@ public class ImageController {
             String username = jwtService.extractUsername(token.split(" ")[1]);
             if(showAll != null && showAll && userDetailsService.loadUserByUsername(username) != null){
                 logger.info("Retrieving all image paths");
-                return ResponseEntity.status(HttpStatus.OK).body(imageService.getAllImageFilename());
+                return ResponseEntity.status(HttpStatus.OK).body(imageInfoService.getAllImageFilename());
             }
         }
 
         logger.info("Retrieving all published paths");
-        return ResponseEntity.status(HttpStatus.OK).body(imageService.getAllPublishedImageFilename());
+        return ResponseEntity.status(HttpStatus.OK).body(imageInfoService.getAllPublishedImageFilename());
     }
 
     @PutMapping(value = "/add")
     public ResponseEntity<?> addImage(@RequestParam("image") MultipartFile image) {
         try{
-            Image savedImage = imageService.saveImage(image);
+            Image savedImage = imageUploadService.saveImage(image);
             logger.log(Level.INFO, "Adding image " + image.getOriginalFilename() + " as " + savedImage.getPath());
             return ResponseEntity.status(HttpStatus.OK).body(savedImage);
         } catch (InvalidPathException e ){
@@ -85,7 +93,7 @@ public class ImageController {
     @GetMapping(value = "/{id:[0-9a-zA-Z-]{36}}")
     public ResponseEntity<?> getImageInfoById(@PathVariable("id") UUID id) {
         try{
-            Image image = imageService.getImageInfoById(id);
+            Image image = imageInfoService.getImageInfoById(id);
             logger.log(Level.INFO, "Retrieving image info for " + id);
             return ResponseEntity.status(HttpStatus.OK).body(new ImageInfoDto(image));
         } catch (NoSuchFileException e) {
@@ -94,10 +102,10 @@ public class ImageController {
         }
     }
 
-    @PutMapping(value = "/{id:[0-9a-zA-Z-]{36}}/publish")
-    public ResponseEntity<?> publishImage(@PathVariable("id") UUID id, @RequestParam Boolean published) {
+    @PutMapping(value = "/{id:[0-9a-zA-Z-]{36}}/")
+    public ResponseEntity<?> setImageInfo(@PathVariable("id") UUID id, @RequestBody ImageInfoDto info) {
         try{
-            imageService.setImagePublished(id, published);
+            imageInfoService.setImageInfo(id, info);
             logger.log(Level.INFO, "Updating image with UUID" + id);
             return ResponseEntity.status(HttpStatus.OK).body("");
         } catch (FileNotFoundException e) {
@@ -109,7 +117,7 @@ public class ImageController {
     @GetMapping(value = "/{filename:[0-9a-zA-Z-]{36}\\.[a-zA-Z]{3,4}}")
     public ResponseEntity<?> getImageById(@PathVariable("filename") String filename, HttpServletRequest request) {
         try{
-            Resource image = imageService.getImageFileByFilename(filename);
+            Resource image = imageDownloadService.getImageFileByFilename(filename);
 
             // Try to determine file's content type
             String contentType = null;
@@ -138,7 +146,7 @@ public class ImageController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteImageById(@PathVariable("id") UUID id) {
         try{
-            imageService.deleteImageById(id);
+            imageDownloadService.deleteImageById(id);
             logger.log(Level.INFO, "Deleting image with id " + id);
             return ResponseEntity.status(HttpStatus.OK).body("Deleted image " + id);
         } catch (IOException e) {
@@ -149,21 +157,21 @@ public class ImageController {
 
     @GetMapping(value = "/orphans")
     public ResponseEntity<?> getOrphanImages() {
-        List<String> fileNames = imageService.getOrphans().stream().map(path -> path.getFileName().toString()).toList();
+        List<String> fileNames = imageInfoService.getOrphans().stream().map(path -> path.getFileName().toString()).toList();
         return ResponseEntity.status(HttpStatus.OK).body(fileNames);
     }
 
     @PostMapping(value = "/orphans/index")
     public ResponseEntity<?> reIndexOrphans() {
-        imageService.indexOrphans();
-        return ResponseEntity.status(HttpStatus.OK).body(imageService.getOrphans());
+        imageInfoService.indexOrphans();
+        return ResponseEntity.status(HttpStatus.OK).body(imageInfoService.getOrphans());
     }
 
     @DeleteMapping(value = "/orphans")
     public ResponseEntity<?> deleteOrphanImages() {
         try{
-            List<String> fileNames = imageService.getOrphans().stream().map(path -> path.getFileName().toString()).toList();
-            imageService.deleteOrphans();
+            List<String> fileNames = imageInfoService.getOrphans().stream().map(path -> path.getFileName().toString()).toList();
+            imageInfoService.deleteOrphans();
             return ResponseEntity.status(HttpStatus.OK).body(fileNames);
         } catch (IOException e) {
             logger.log(Level.WARNING, "Delete request for non-existing orphan images");
