@@ -6,6 +6,7 @@ import com.jcv8.framegallery.image.dataaccess.entity.ImageProperty.ImageProperty
 import com.jcv8.framegallery.image.dataaccess.entity.helper.PathConverter;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
@@ -59,5 +60,17 @@ public class Image {
         return matcher.matches();
     }
 
+    /**
+     * Extracts the UUID from a filename (e.g. removes the file extension)
+     * @return the UUID as String
+     */
+    public static UUID getUUIDFromPath(Path path) {
+        Pattern pattern = Pattern.compile("^[^.]+");
+        Matcher matcher = pattern.matcher(path.toString());
+        if (matcher.find()) {
+            return UUID.fromString(matcher.group());
+        }
+        throw new InvalidPathException(path.toString(), "File does not have an extension");
+    }
 
 }
