@@ -3,9 +3,7 @@ package com.jcv8.framegallery.image.dataaccess.dto;
 import com.jcv8.framegallery.image.dataaccess.entity.Image;
 import com.jcv8.framegallery.image.dataaccess.entity.ImageProperty.ImageProperty;
 import com.jcv8.framegallery.image.dataaccess.entity.Keyword;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,13 +11,15 @@ import java.util.UUID;
 @Data
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ImageInfoDto {
     private UUID id;
     private String title;
     private String description;
     private List<Keyword> keywordList;
     private List<ImageProperty<?>> imagePropertyList;
-    private boolean published;
+    private Boolean published;
     private String filename;
 
     public ImageInfoDto(Image image) {
