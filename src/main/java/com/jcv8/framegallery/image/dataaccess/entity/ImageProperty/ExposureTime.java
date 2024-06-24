@@ -9,13 +9,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ExposureTime extends ImageProperty<String>{
+public class ExposureTime extends ImageProperty<Double>{
 
-    private String propertyName = "Aperture";
-    private String propertyValue;
-    private String propertyUnit = "f";
+    private String propertyName = "Exposure Time";
+    private double propertyValue;
+    private String propertyUnit = "s";
 
-    public ExposureTime(String value){
+    public ExposureTime(double value){
         this.propertyValue = value;
     }
 
@@ -30,7 +30,7 @@ public class ExposureTime extends ImageProperty<String>{
     }
 
     @Override
-    public String getPropertyValue() {
+    public Double getPropertyValue() {
         return propertyValue;
     }
 
