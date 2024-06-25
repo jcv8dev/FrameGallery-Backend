@@ -78,6 +78,10 @@ public class UserController {
 
     @GetMapping("/info")
     public ResponseEntity<?> artistInfo(){
-        return ResponseEntity.status(HttpStatus.OK).body(userInfoService.getArtistInfo());
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(userInfoService.getArtistInfo());
+        } catch (IllegalAccessException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+        }
     }
 }

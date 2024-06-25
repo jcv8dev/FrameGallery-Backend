@@ -55,8 +55,9 @@ public class UserInfoService implements UserDetailsService {
         return !repository.findAll().isEmpty();
     }
 
-    public Map<String, String> getArtistInfo() {
+    public Map<String, String> getArtistInfo() throws IllegalAccessException {
         List<UserInfo> artists = repository.findAll();
+        if(artists.isEmpty()) throw new IllegalAccessException("There isn't any info");
         Map<String, String> artistInfo = new HashMap<>();
         artistInfo.put("name", artists.get(0).getName());
         return artistInfo;
