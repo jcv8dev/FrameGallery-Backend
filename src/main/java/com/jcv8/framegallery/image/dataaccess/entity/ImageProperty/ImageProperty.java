@@ -16,9 +16,10 @@ public abstract class ImageProperty<T> {
     @GeneratedValue
     private UUID id;
 
-    abstract String getPropertyName();
-    abstract String getPropertyUnit();
-    abstract T getPropertyValue();
-    abstract String getFormattedValue();
+    abstract String getName_();
+    abstract String getUnit_();
+    abstract T getValue_();
+    abstract String getFormattedValue_();
+
 
 }

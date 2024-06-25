@@ -9,33 +9,33 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Aperture extends ImageProperty<Double>{
+public class Aperture extends ImageProperty<String>{
 
-    private String name = "Aperture";
-    private Double propertyValue;
-    private String unit = "f";
+    private String name_ = "Aperture";
+    private String value_;
+    private String unit_ = "f";
 
-    public Aperture(double propertyValue){
-        this.propertyValue = propertyValue;
+    public Aperture(String propertyValue){
+        this.value_ = propertyValue;
     }
 
     @Override
-    public String getPropertyName() {
-        return name;
+    public String getName_() {
+        return name_;
     }
 
     @Override
-    public String getPropertyUnit() {
-        return unit;
+    public String getUnit_() {
+        return unit_;
     }
 
     @Override
-    public Double getPropertyValue() {
-        return propertyValue;
+    public String getValue_() {
+        return value_;
     }
 
     @Override
-    public String getFormattedValue() {
-        return String.format("%s%s", unit, propertyValue);
+    public String getFormattedValue_() {
+        return String.format("%s%s", unit_, value_);
     }
 }

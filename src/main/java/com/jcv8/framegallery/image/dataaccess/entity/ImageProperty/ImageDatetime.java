@@ -9,33 +9,33 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ExposureTime extends ImageProperty<String>{
+public class ImageDatetime extends ImageProperty<String>{
 
-    private String name_ = "Exposure Time";
+    private String name_ = "Time";
     private String value_;
-    private String unit_ = "s";
+    private String unit_ = "";
 
-    public ExposureTime(String value){
+    public ImageDatetime(String value){
         this.value_ = value;
     }
 
     @Override
-    public String getName_() {
+    String getName_() {
         return name_;
     }
 
     @Override
-    public String getUnit_() {
-        return unit_;
+    String getUnit_() {
+        return "YYYY-MM-DD HH:MM:SS";
     }
 
     @Override
-    public String getValue_() {
+    String getValue_() {
         return value_;
     }
 
     @Override
-    public String getFormattedValue_() {
-        return String.format("%s%s", value_, unit_);
+    String getFormattedValue_() {
+        return value_;
     }
 }

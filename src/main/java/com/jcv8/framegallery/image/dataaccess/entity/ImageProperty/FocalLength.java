@@ -9,33 +9,33 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class FocalLength extends ImageProperty<Double>{
+public class FocalLength extends ImageProperty<String>{
 
-    private String propertyName = "Focal Length";
-    private Double propertyValue;
-    private String propertyUnit = "mm";
+    private String name_ = "Focal Length";
+    private String value_;
+    private String unit_ = "mm";
 
-    public FocalLength(double propertyValue){
-        this.propertyValue = propertyValue;
+    public FocalLength(String propertyValue){
+        this.value_ = propertyValue;
     }
 
     @Override
-    public String getPropertyName() {
-        return propertyName;
+    public String getName_() {
+        return name_;
     }
 
     @Override
-    public String getPropertyUnit() {
-        return propertyUnit;
+    public String getUnit_() {
+        return unit_;
     }
 
     @Override
-    public Double getPropertyValue() {
-        return propertyValue;
+    public String getValue_() {
+        return value_;
     }
 
     @Override
-    public String getFormattedValue() {
-        return String.format("%s%s", propertyUnit, propertyValue);
+    public String getFormattedValue_() {
+        return String.format("%s%s", value_, unit_);
     }
 }

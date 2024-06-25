@@ -9,33 +9,33 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Iso extends ImageProperty<Integer>{
+public class Iso extends ImageProperty<String>{
 
-    private String propertyName = "ISO";
-    private Integer propertyValue;
-    private String propertyUnit = "";
+    private String name_ = "ISO";
+    private String value_;
+    private String unit_ = "";
 
-    public Iso(int value){
-        this.propertyValue = value;
+    public Iso(String value){
+        this.value_ = value;
     }
 
     @Override
-    public String getPropertyName() {
-        return propertyName;
+    public String getName_() {
+        return name_;
     }
 
     @Override
-    public String getPropertyUnit() {
-        return propertyUnit;
+    public String getUnit_() {
+        return unit_;
     }
 
     @Override
-    public Integer getPropertyValue() {
-        return propertyValue;
+    public String getValue_() {
+        return value_;
     }
 
     @Override
-    public String getFormattedValue() {
-        return String.format("%s", propertyValue);
+    public String getFormattedValue_() {
+        return String.format("%s", value_);
     }
 }
