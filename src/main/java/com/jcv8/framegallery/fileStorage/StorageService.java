@@ -65,8 +65,7 @@ public class StorageService implements StorageServiceApi {
     public Stream<Path> loadAll() {
         try {
             return Files.walk(this.rootLocation, 1)
-                    .filter(path -> !path.equals(this.rootLocation))
-                    .map(this.rootLocation::relativize);
+                    .filter(path -> !path.equals(this.rootLocation));
         }
         catch (IOException e) {
             throw new StorageException("Failed to read stored files", e);
@@ -84,7 +83,6 @@ public class StorageService implements StorageServiceApi {
             else {
                 throw new StorageFileNotFoundException(
                         "Could not read file: " + path);
-
             }
         }
         catch (MalformedURLException e) {

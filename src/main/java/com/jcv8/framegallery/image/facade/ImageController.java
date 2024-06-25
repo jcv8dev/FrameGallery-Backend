@@ -1,7 +1,8 @@
 package com.jcv8.framegallery.image.facade;
 
 import com.jcv8.framegallery.configuration.JwtService;
-import com.jcv8.framegallery.image.dataaccess.dto.ImageInfoDto;
+import com.jcv8.framegallery.image.dataaccess.dto.ImageInfoRequestDto;
+import com.jcv8.framegallery.image.dataaccess.dto.ImageInfoResponseDto;
 import com.jcv8.framegallery.image.dataaccess.entity.Image;
 import com.jcv8.framegallery.image.logic.ImageDownloadService;
 import com.jcv8.framegallery.image.logic.ImageInfoService;
@@ -95,7 +96,7 @@ public class ImageController {
         try{
             Image image = imageInfoService.getImageInfoById(id);
             logger.log(Level.INFO, "Retrieving image info for " + id);
-            return ResponseEntity.status(HttpStatus.OK).body(new ImageInfoDto(image));
+            return ResponseEntity.status(HttpStatus.OK).body(new ImageInfoResponseDto(image));
         } catch (NoSuchFileException e) {
             logger.log(Level.WARNING, "Request for non-existing image with id " + id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -103,7 +104,7 @@ public class ImageController {
     }
 
     @PutMapping(value = "/{id:[0-9a-zA-Z-]{36}}/")
-    public ResponseEntity<?> setImageInfo(@PathVariable("id") UUID id, @RequestBody ImageInfoDto info) {
+    public ResponseEntity<?> setImageInfo(@PathVariable("id") UUID id, @RequestBody ImageInfoRequestDto info) {
         try{
             imageInfoService.setImageInfo(id, info);
             logger.log(Level.INFO, "Updating image with UUID" + id);

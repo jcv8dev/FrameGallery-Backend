@@ -37,10 +37,21 @@ public class ImageDownloadService {
         return storageService.loadAsResource(image.get().getPath());
     }
 
-
+    /**
+     * Retrieves the actual file from storage
+     * @param filename the file name as a relative path to the upload directory
+     * @return the file as a Resource
+     * @throws NoSuchFileException when there isn't a file with that name in the database
+     */
     public Resource getImageFileByFilename(String filename) throws NoSuchFileException {
         UUID uuid = Image.getUUIDFromPath(Path.of(filename));
         return getImageById(uuid);
+    }
+
+    public Resource getScaledFileByFilename(String filename, int maxWidth, int maxHeight) throws NoSuchFileException {
+        Resource imageResource = getImageFileByFilename(filename);
+        // TODO
+        return imageResource;
     }
 
     /**

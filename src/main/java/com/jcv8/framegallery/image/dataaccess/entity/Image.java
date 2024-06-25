@@ -1,11 +1,10 @@
 package com.jcv8.framegallery.image.dataaccess.entity;
 
+
+import com.jcv8.framegallery.image.dataaccess.entity.ImageProperty.*;
 import jakarta.persistence.*;
 import lombok.*;
-import com.jcv8.framegallery.image.dataaccess.entity.ImageProperty.ImageProperty;
 import com.jcv8.framegallery.image.dataaccess.entity.helper.PathConverter;
-import org.springframework.boot.autoconfigure.web.WebProperties;
-
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.List;
@@ -65,12 +64,12 @@ public class Image {
      * @return the UUID as String
      */
     public static UUID getUUIDFromPath(Path path) {
-        Pattern pattern = Pattern.compile("^[^.]+");
+        Pattern pattern = Pattern.compile("[0-9a-zA-Z-]{36}");
         Matcher matcher = pattern.matcher(path.toString());
         if (matcher.find()) {
             return UUID.fromString(matcher.group());
         }
-        throw new InvalidPathException(path.toString(), "File does not have an extension");
+        throw new InvalidPathException(path.toString(), "File does not match UUID Regex");
     }
 
 }

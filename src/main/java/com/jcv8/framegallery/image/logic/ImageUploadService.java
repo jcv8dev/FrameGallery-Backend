@@ -1,17 +1,17 @@
 package com.jcv8.framegallery.image.logic;
 
+import com.drew.lang.CompoundException;
 import com.jcv8.framegallery.image.dataaccess.entity.Image;
-import com.jcv8.framegallery.image.dataaccess.repository.ImagePropertyRepository;
 import com.jcv8.framegallery.image.dataaccess.repository.ImageRepository;
 import com.jcv8.framegallery.fileStorage.StorageService;
-import com.jcv8.framegallery.image.dataaccess.repository.KeywordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,17 +21,17 @@ import java.util.regex.Pattern;
 @Service
 public class ImageUploadService {
 
+    private final Logger logger = Logger.getLogger(ImageUploadService.class.getName());
+
     @Autowired
     private StorageService storageService;
 
     @Autowired
     private ImageRepository imageRepository;
 
-    @Autowired
-    private ImagePropertyRepository imagePropertyRepository;
 
     @Autowired
-    private KeywordRepository keywordRepository;
+    private ImageInfoService imageInfoService;
 
     /**
      * Saves a given MultipartFile to the file system.
@@ -47,6 +47,11 @@ public class ImageUploadService {
         Path imagePath = generateUUIDPath(image.getId(), file.getOriginalFilename());
         storageService.store(imagePath, file);
         image.setPath(imagePath);
+        try{
+            image.setImageProperties(imageInfoService.readFileMetadata(file.getResource()));
+        } catch (CompoundException | IOException e) {
+            logger.warning(e.getMessage());
+        }
         image.setPublished(false); // default: image not publicly visible
         return imageRepository.save(image);
     }
@@ -69,6 +74,8 @@ public class ImageUploadService {
             throw new InvalidPathException(filename, "File does not have a extension");
         }
     }
+
+
 
 
 }
